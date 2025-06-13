@@ -18,5 +18,5 @@ def read_gcs_file():
     return f"<pre>{content}</pre>"
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+    port = int(os.environ.get("PORT", 8080))  # Critical for Cloud Run
+    app.run(host="0.0.0.0", port=port)         # Must bind to 0.0.0.0
