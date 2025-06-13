@@ -1,31 +1,18 @@
-from flask import Flask
 import os
-import logging
-from google.cloud import storage
+from flask import Flask, request, jsonify
 
-# Enable logging
-logging.basicConfig(level=logging.DEBUG)
-
-# Create Flask app
 app = Flask(__name__)
 
-@app.route("/")
-def serve_file():
-    logging.info("Handling request to /")
+@app.route("/", methods=["GET"])
+def index():
+    return "✅ Optimus is alive and running on Cloud Run!"
 
-    project_id = os.environ.get("PROJECT_ID")
-    bucket_name = "optimus-os-v2-constitution"
-    file_name = "constitution.txt"
-
-    try:
-        client = storage.Client(project=project_id)
-        bucket = client.bucket(bucket_name)
-        blob = bucket.blob(file_name)
-        content = blob.download_as_text()
-        return f"<pre>{content}</pre>"
-    except Exception as e:
-        logging.error(f"Error: {e}")
-        return f"Error: {str(e)}", 500
+@app.route("/echo", methods=["POST"])
+def echo():
+    data = request.json
+    return jsonify({"you_sent": data})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    # Cloud Run expects the service to listen on the port defined by the PORT env variable
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
