@@ -1,3 +1,4 @@
+print("--- SCRIPT START: main.py is being executed. ---")
 import functions_framework
 from google.cloud import storage
 import os
