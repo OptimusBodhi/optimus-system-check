@@ -1,1 +1,1 @@
-web: functions-framework --target=optimus_core_handler
+web: functions-framework --target=optimus_core_handler --port $PORT
