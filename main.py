@@ -3,7 +3,7 @@ from google.cloud import storage
 import os
 
 CONSTITUTION_BUCKET = os.environ.get('GCP_PROJECT') + '-constitution'
-CONSTITUTION_FILE = "Optimus Constitution.pdf"
+CONSTITUTION_FILE = "constitution.txt"
 
 @functions_framework.http
 def optimus_core_handler(request):
