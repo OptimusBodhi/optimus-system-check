@@ -1,11 +1,18 @@
 from flask import Flask
 import os
+import logging
 from google.cloud import storage
 
+# Enable logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Create Flask app
 app = Flask(__name__)
 
 @app.route("/")
 def serve_file():
+    logging.info("Handling request to /")
+
     project_id = os.environ.get("PROJECT_ID")
     bucket_name = "optimus-os-v2-constitution"
     file_name = "constitution.txt"
@@ -17,4 +24,5 @@ def serve_file():
         content = blob.download_as_text()
         return f"<pre>{content}</pre>"
     except Exception as e:
+        logging.error(f"Error: {e}")
         return f"Error: {str(e)}", 500
