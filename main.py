@@ -30,3 +30,4 @@ def optimus_core_handler(request):
         print(f"CRITICAL ERROR during diagnostic. - {e}")
         error_message = f"CRITICAL ERROR: An unexpected exception occurred. Details: {e}"
         return (error_message, 500)
+
