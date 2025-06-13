@@ -3,7 +3,7 @@ import functions_framework
 from google.cloud import storage
 import os
 
-CONSTITUTION_BUCKET = os.environ.get('GCP_PROJECT') + '-constitution'
+CONSTITUTION_BUCKET = os.environ.get('GOOGLE_CLOUD_PROJECT') + '-constitution'
 CONSTITUTION_FILE = "constitution.txt"
 
 @functions_framework.http
