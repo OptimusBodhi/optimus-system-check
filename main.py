@@ -8,7 +8,7 @@ CONSTITUTION_BUCKET = os.environ.get('GCP_PROJECT') + '-constitution'
 
 # The name of the file in the bucket.
 # Please verify this is the exact filename you uploaded.
-CONSTITUTION_FILE = "The Optimus Jon Constitution.txt" 
+CONSTITUTION_FILE = "The Optimus Constitution.txt" 
 
 @functions_framework.http
 def optimus_core_handler(request):
