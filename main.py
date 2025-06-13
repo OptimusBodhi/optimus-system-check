@@ -32,3 +32,4 @@ def optimus_core_handler(request):
         error_message = f"CRITICAL ERROR: An unexpected exception occurred. Details: {e}"
         return (error_message, 500)
 
+
