@@ -1,35 +1,15 @@
-print("--- SCRIPT START: main.py is being executed. ---")
-import functions_framework
-from google.cloud import storage
 import os
+from google.cloud import storage
 
-CONSTITUTION_BUCKET = os.environ.get('GOOGLE_CLOUD_PROJECT') + '-constitution'
-CONSTITUTION_FILE = "constitution.txt"
+# Manually injected project ID fallback
+project_id = os.environ.get("PROJECT_ID")
+bucket_name = "optimus-os-v2-constitution"
+file_name = "constitution.txt"
 
-@functions_framework.http
-def optimus_core_handler(request):
-    """A diagnostic function to check for a file's existence and metadata."""
-    try:
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(CONSTITUTION_BUCKET)
-        blob = bucket.blob(CONSTITUTION_FILE)
+client = storage.Client(project=project_id)
+bucket = client.bucket(bucket_name)
+blob = bucket.blob(file_name)
+content = blob.download_as_text()
 
-        # Instead of reading the file, just check if it exists
-        if blob.exists():
-            # Reload metadata to get size, etc.
-            blob.reload() 
-            file_size = blob.size
-            message = f"--- DIAGNOSTIC SUCCESS ---\n\nFile '{CONSTITUTION_FILE}' exists in bucket '{CONSTITUTION_BUCKET}'.\nFile size: {file_size} bytes."
-            print(message)
-            return (message, 200)
-        else:
-            error_message = f"--- DIAGNOSTIC FAILURE ---\n\nFile '{CONSTITUTION_FILE}' was NOT FOUND in bucket '{CONSTITUTION_BUCKET}'."
-            print(error_message)
-            return (error_message, 404)
-
-    except Exception as e:
-        print(f"CRITICAL ERROR during diagnostic. - {e}")
-        error_message = f"CRITICAL ERROR: An unexpected exception occurred. Details: {e}"
-        return (error_message, 500)
-
-
+print("✅ Successfully read file from Cloud Storage:")
+print(content)
