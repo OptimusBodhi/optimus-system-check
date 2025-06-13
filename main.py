@@ -1,18 +1,33 @@
+from flask import Flask
 import os
-from flask import Flask, request, jsonify
+import logging
+from google.cloud import storage
 
+logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 
-@app.route("/", methods=["GET"])
-def index():
-    return "✅ Optimus is alive and running on Cloud Run!"
+@app.route("/")
+def serve_file():
+    logging.info("Handling request to the root URL /")
 
-@app.route("/echo", methods=["POST"])
-def echo():
-    data = request.json
-    return jsonify({"you_sent": data})
+    # We will hardcode the bucket name for simplicity and robustness
+    bucket_name = "optimus-os-v2-constitution" 
+    file_name = "constitution.txt"
 
-if __name__ == "__main__":
-    # Cloud Run expects the service to listen on the port defined by the PORT env variable
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+    try:
+        # In Cloud Run, storage.Client() automatically finds the credentials
+        # from the service account the service is running as. No key file needed.
+        client = storage.Client()
+        bucket = client.bucket(bucket_name)
+        blob = bucket.blob(file_name)
+
+        logging.info(f"Attempting to download gs://{bucket_name}/{file_name}")
+        content = blob.download_as_text()
+
+        logging.info("Successfully downloaded file.")
+        return f"<pre>--- Optimus AI OS: Core Identity Protocol ---\n\n{content}</pre>"
+
+    except Exception as e:
+        error_message = f"An error occurred: {str(e)}"
+        logging.error(error_message)
+        return error_message, 500
